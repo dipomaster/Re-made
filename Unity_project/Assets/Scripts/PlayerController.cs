@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 hitPosition;
     public bool exit=true;
     private bool enter = false;
+    public bool Jump=false;
     private void Awake()
     {
 gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale, baseScale, smoothSpeed / 100f);
@@ -34,19 +35,17 @@ gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale,
     void Update()
     {
         Move();
-       
+        //ChangeSize();
     }
     private void FixedUpdate()
     {
-        if (exit)
-        gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale, baseScale, smoothSpeed / 100f);
-        if (enter)
-            gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale, hitPosition, smoothSpeed / 100f);
+       
 
     }
 
     void Move()
     {
+        RaycastHit hit;
         if(Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.UpArrow))
         {
             rb.AddForce(Vector3.forward *speed);
@@ -63,21 +62,26 @@ gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale,
         {
             rb.AddForce(Vector3.back * speed);
         }
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump")&& Physics.Raycast(transform.position, Vector3.down,out hit))
         {
+           if(Jump)
+             rb.AddForce (Vector3.up * speed* speedmultiplier * Physics.gravity.y*(-1));                       
+        }
 
-           
-
-             rb.AddForce (Vector3.up * speed* speedmultiplier * Physics.gravity.y*(-1));
-           
+        if(Jump==false)
+        {
+            rb.AddForce(Vector3.up * Physics.gravity.y );
         }
     }
-
-    private void OnTriggerEnter(Collider other)
+    
+    private void OnColliderEnter(Collider other)
     {
 
-        hitPosition = other.transform.position;
 
+        hitPosition = other.transform.position*0.1f;
+        if (other.gameObject.CompareTag("Ground"))
+            Jump = true;
+        
 
         if (Physics.Raycast(transform.position, transform.TransformDirection(other.transform.position)) && gameObject.transform.localScale == baseScale)
 
@@ -85,10 +89,21 @@ gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale,
         exit = false;
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        enter = false;
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Ground"))
+    //        Jump = false;
+
+    //    enter = false;
        
-        exit = true;
+    //    exit = true;
+    //}
+
+  void ChangeSize()
+    {
+        if (exit)
+            gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale, baseScale, smoothSpeed / 100f);
+        if (enter)
+            gameObject.transform.localScale = Vector3.Slerp(gameObject.transform.localScale, hitPosition, smoothSpeed / 100f);
     }
 }

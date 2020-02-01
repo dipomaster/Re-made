@@ -15,9 +15,13 @@ public class Food : MonoBehaviour
             player.GetComponent<PlayerController>().baseScale += new Vector3(0.2f, 0.2f, 0.2f);
             player.GetComponent<Rigidbody>().mass += 0.1f;
             player.GetComponent<PlayerController>().exit = true;
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
+        
     }
 
-
+    private void OnTriggerExit(Collider other)
+    {
+        
+    }
 }

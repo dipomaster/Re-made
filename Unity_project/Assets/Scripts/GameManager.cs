@@ -18,6 +18,13 @@ public class GameManager : MonoBehaviour
         
     }
 
+    void Awake()
+    {
+       
+
+
+        DontDestroyOnLoad(this.gameObject);
+    }
     public void GotoMainScene()
     {
         SceneManager.LoadScene("Game");
