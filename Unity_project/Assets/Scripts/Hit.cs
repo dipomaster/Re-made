@@ -5,7 +5,7 @@ using UnityEngine;
 public class Hit : MonoBehaviour
 {
     public GameObject player;
-
+    public float mass=1.1f;
 
     // Start is called before the first frame update
     void Start()
@@ -24,13 +24,13 @@ public class Hit : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            if (player.GetComponent<Rigidbody>().mass >= 1.1f)
+            if (player.GetComponent<Rigidbody>().mass >= mass)
             {
                 GetComponent<Rigidbody>().constraints = ~RigidbodyConstraints.FreezeRotationY;
                 GetComponent<Rigidbody>().constraints = ~RigidbodyConstraints.FreezePositionY;
             }
 
-            }
+        }
     }
 
 }
